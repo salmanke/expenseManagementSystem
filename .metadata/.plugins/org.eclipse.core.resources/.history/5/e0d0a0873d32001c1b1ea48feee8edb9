@@ -1,0 +1,5 @@
+package com.deloitte.entities;
+
+public class ExpenseCount {
+
+}

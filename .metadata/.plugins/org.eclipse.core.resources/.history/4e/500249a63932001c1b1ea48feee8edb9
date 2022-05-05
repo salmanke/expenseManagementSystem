@@ -1,0 +1,73 @@
+package com.deloitte.servlets;
+
+import java.io.IOException;
+
+import javax.servlet.ServletException;
+import javax.servlet.http.HttpServlet;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
+
+import org.hibernate.Session;
+import org.hibernate.SessionFactory;
+import org.hibernate.Transaction;
+
+import com.deloitte.dao.UserDAO;
+import com.deloitte.entities.User;
+import com.deloitte.util.HibernateHelper;
+
+
+public class RegistrationServlet extends HttpServlet {
+	private static final long serialVersionUID = 1L;
+       
+    //default constructor
+    public RegistrationServlet() {
+        super();
+        
+    }
+
+	
+	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+		
+		response.getWriter().append("Served at: ").append(request.getContextPath());
+	}
+
+	
+	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+	
+	
+		HttpSession s = request.getSession();
+
+		try {
+		String name= request.getParameter("name");
+		String username= request.getParameter("username");
+		String password=request.getParameter("password");
+		if(UserDAO.getUserByUserName(username)==null) {
+
+				User user = new User(name, username, password);
+				
+				//saving user in database
+				SessionFactory sf = HibernateHelper.getInstance();
+				Session hibernateSession = sf.openSession();
+				Transaction trans = hibernateSession.beginTransaction()	;
+				int uId = (int) hibernateSession.save(user);
+				trans.commit();
+				hibernateSession.close();
+				if(uId>0) {
+				s.setAttribute("success", "User successfully registered. ID is -"+uId);}else {
+					s.setAttribute("warning", "Cannot add User");
+				}
+				response.sendRedirect("login.jsp");
+				}else {
+					s.setAttribute("warning", "User with the username already registered select different username");
+					response.sendRedirect("registration.jsp");
+				}}
+		
+		catch(IOException e){
+			e.printStackTrace();
+				
+		}		
+				
+	}
+
+}

@@ -1,0 +1,31 @@
+function add_to_local(eid){
+	
+	
+	let getId = localStorage.getItem("getId")
+	
+	if(getId==null){
+		
+		let ex = { expenseId : eid};
+	
+	localStorage.setItem("getId",JSON.stringify(ex));
+		
+	}else{
+		localStorage.setItem("getId",null);
+		let ex = { expenseId : eid};
+	
+	localStorage.setItem("getId",JSON.stringify(ex));
+	}
+	
+	add_to_modal();
+}
+
+function add_to_modal(){
+	
+	let getId= localStorage.getItem("getId")
+	
+	let exId = JSON.parse(getId);
+	
+	 let add  =   `<input type="hidden" name="expenseId" value="${exId.expenseId}" >`;
+	$("#list-body").html(add);
+}
+

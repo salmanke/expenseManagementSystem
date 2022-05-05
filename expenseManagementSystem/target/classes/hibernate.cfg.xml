@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE hibernate-configuration PUBLIC
+	"-//Hibernate/Hibernate Configuration DTD 3.0//EN"
+	"http://www.hibernate.org/dtd/hibernate-configuration-3.0.dtd">
+	
+	
+<hibernate-configuration>
+
+	<session-factory>
+		<!-- DriverName -->
+		<!-- Fully qualified class name -->
+		<property name="connection.driver_class">com.mysql.cj.jdbc.Driver</property>
+		<!-- URL of the DB -->
+		<property name="connection.url">jdbc:mysql://localhost:3306/expensemanagementsystem</property>
+		<!-- UserName -->
+		<property name="connection.username">root</property>
+		<!-- Password -->
+		<property name="connection.password">zxcv0987</property>
+		
+		<!-- Hibernate -->
+		<!-- Dialect -->
+		<property name="dialect">org.hibernate.dialect.MySQL8Dialect</property>
+		
+		<!-- Creation of Tables -->
+		<property name="hbm2ddl.auto">update</property>
+		
+		<!-- Mappings -->
+		<mapping class="com.deloitte.entities.User"></mapping>
+		<!-- DriverName -->
+		<mapping class="com.deloitte.entities.Expense"></mapping>
+		
+		
+	
+	</session-factory>
+
+</hibernate-configuration>

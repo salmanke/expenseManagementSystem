@@ -1,0 +1,45 @@
+package com.deloitte.servlets;
+
+import java.io.IOException;
+import javax.servlet.ServletException;
+import javax.servlet.http.HttpServlet;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
+import com.deloitte.dao.ExpenseDAO;
+import com.deloitte.entities.Expense;
+import com.deloitte.entities.User;
+
+/**
+ * Servlet implementation class DeleteExpenseServlet
+ */
+public class DeleteExpenseServlet extends HttpServlet {
+	private static final long serialVersionUID = 1L;
+
+	/**
+	 * @see HttpServlet#HttpServlet()
+	 */
+	public DeleteExpenseServlet() {
+		super();
+		// TODO Auto-generated constructor stub
+	}
+
+	/**
+	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse
+	 *      response)
+	 */
+	protected void doGet(HttpServletRequest request, HttpServletResponse response)
+			throws ServletException, IOException {
+		User u = (User) request.getSession().getAttribute("current-user");
+		System.out.println(request.getParameter("expenseId"));
+		Expense expense = ExpenseDAO.fetchExpenseById(Integer.parseInt(request.getParameter("expenseId")));
+		if (expense.getUser().getUserName().equals(u.getUserName())) {
+			ExpenseDAO.deleteExpense(expense);
+		} else {
+			request.getSession().setAttribute("warning", "Invalid Operation Type");
+		}
+
+		response.sendRedirect("homepage.jsp");
+
+	}
+}

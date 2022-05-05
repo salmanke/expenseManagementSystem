@@ -1,0 +1,102 @@
+package com.deloitte.dao;
+
+import java.util.List;
+
+import org.hibernate.Session;
+import org.hibernate.Transaction;
+import org.hibernate.query.Query;
+
+import com.deloitte.entities.Expense;
+import com.deloitte.util.HibernateHelper;
+
+public class ExpenseDAO {
+
+	public ExpenseDAO() {
+		
+		
+	}
+	
+	public  static int saveExpense(Expense e) {
+		Session s= HibernateHelper.getInstance().openSession();
+		int expenseId = 0;
+		try {
+		Transaction tx = s.beginTransaction();
+		expenseId = (int) s.save(e);
+		tx.commit();
+		} catch (Exception ex) {
+		ex.printStackTrace();
+		}finally {
+		s.close();
+		}
+		return expenseId;
+		}
+		
+		
+		
+		public static List<Expense> fetchExpenseByUserId(Integer userId){
+			Session s= HibernateHelper.getInstance().openSession();
+			
+			List<Expense> eList = null;
+			try {
+				
+				Query<Expense> query = s.createQuery("from Expense as e where e.user.userId =:uid",Expense.class);
+				
+				query.setParameter("uid", userId);
+				
+				eList = query.getResultList();
+				
+				
+				
+			}catch(Exception e) {
+				e.printStackTrace();
+			}finally {
+				s.close();
+			}
+			return eList;
+		}
+		
+		public static List<Expense> fetchLast10Expense(Integer userId) {
+			List<Expense> eList = fetchExpenseByUserId(userId);
+			if(eList.size()<10)
+				return eList;
+			return eList.subList(eList.size()-10, eList.size());
+		}
+		
+		public static Expense fetchExpenseById(Integer expenseId){
+			Session s= HibernateHelper.getInstance().openSession();
+			
+			Expense ex = null;
+			try {
+				
+				Query<Expense> query = s.createQuery("from Expense as e where e.expenseId =:eid",Expense.class);
+				
+				query.setParameter("eid", expenseId);
+				
+				ex = query.uniqueResult();
+				
+				
+				
+			}catch(Exception e) {
+				e.printStackTrace();
+			}finally {
+				s.close();
+			}
+			return ex;
+		}
+		
+		public  static void deleteExpense(Expense e) {
+			Session s= HibernateHelper.getInstance().openSession();
+			
+			try {
+			Transaction tx = s.beginTransaction();
+			s.delete(e);
+			tx.commit();
+			} catch (Exception ex) {
+			ex.printStackTrace();
+			}finally {
+			s.close();
+			}
+			
+			}
+			
+}

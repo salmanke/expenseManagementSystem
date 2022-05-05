@@ -1,0 +1,55 @@
+package com.deloitte.dao;
+import org.hibernate.Session;
+
+import com.deloitte.entities.User;
+import com.deloitte.util.HibernateHelper;
+	
+public class UserDAO {
+	
+	//Default Constructor
+	public UserDAO() {
+		
+	}
+
+	public static User getUserByEmailPassword(String userName, String password) {
+		// TODO Auto-generated method stub
+		User u=null;
+		
+		try (Session s=HibernateHelper.getInstance().openSession();){
+			//HQL-> to retrieve record from Database with the given mail and password
+			String query = "from User where userName =: e and password =: p";
+			
+			//Hibernate Session API -> to query the DB
+			//with Dynamic values
+			//searching for a unique result
+			u=(User) s.createQuery(query).setParameter("e", userName).setParameter("p", password).uniqueResult();
+		
+		}catch(Exception e){
+			e.printStackTrace();
+		}/* finally {
+			s.close();
+		}*/
+		return u;
+		
+	}
+	public static User getUserByUserName(String userName) {
+		User u=null;
+		
+		try (Session s=HibernateHelper.getInstance().openSession();){
+			//HQL-> to retrieve record from Database with the given mail and password
+			String query = "from User where userName =: u";
+			
+			//Hibernate Session API -> to query the DB
+			//with Dynamic values
+			//searching for a unique result
+			u=(User) s.createQuery(query).setParameter("u", userName).uniqueResult();
+		
+		}catch(Exception e){
+			e.printStackTrace();
+		}/* finally {
+			s.close();
+		}*/
+		return u;
+	}
+	
+}
